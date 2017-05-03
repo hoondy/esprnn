@@ -80,7 +80,7 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-model.fit([input_3acc, input_5don], inputY, nb_epoch=EPOCHS, validation_split=0.05, batch_size=BATCH_SIZE, verbose=2)
+model.fit([input_3acc, input_5don], inputY, epochs=EPOCHS, validation_split=0.05, batch_size=BATCH_SIZE, verbose=2)
 # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
 
 ### SAVE DATA ###
