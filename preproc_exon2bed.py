@@ -83,21 +83,20 @@ def exon2bed(input_file, span, sample):
 
                 ### if RPKM >1 is expressed(1), otherwise unexpressed(0)
                 expr = str(int(float(exon[2])>1))
-                print float(exon[2])
 
                 if strand == "+":
                     pos = int(exon[0])
-                    print chr + "\t" + str(pos-span-1) + "\t" + str(pos+span-1) + "\t" + t + "__3acc__intron-3pss["+str(pos)+"-exon" + "\t" + expr + "\t" + strand
+                    print chr + "\t" + str(pos-span-1) + "\t" + str(pos+span-1) + "\t" + t + "__3acc__intron-3pss["+str(pos)+"-exon" + "\t" + expr + "\t" + strand + "\t" + str(float(exon[2]))
 
                     pos = int(exon[1])
-                    print chr + "\t" + str(pos-span) + "\t" + str(pos+span) + "\t" + t + "__5don__exon-"+str(pos)+"]5pss-intron" + "\t" + expr + "\t" + strand
+                    print chr + "\t" + str(pos-span) + "\t" + str(pos+span) + "\t" + t + "__5don__exon-"+str(pos)+"]5pss-intron" + "\t" + expr + "\t" + strand + "\t" + str(float(exon[2]))
 
                 else: # neg strand
                     pos = int(exon[1])
-                    print chr + "\t" + str(pos-span) + "\t" + str(pos+span) + "\t" + t + "__3acc__intron-3pss["+str(pos)+"-exon" + "\t" + expr + "\t" + strand
+                    print chr + "\t" + str(pos-span) + "\t" + str(pos+span) + "\t" + t + "__3acc__intron-3pss["+str(pos)+"-exon" + "\t" + expr + "\t" + strand + "\t" + str(float(exon[2]))
 
                     pos = int(exon[0])
-                    print chr + "\t" + str(pos-span-1) + "\t" + str(pos+span-1) + "\t" + t +"__5don__exon-"+str(pos)+"]5pss-intron" + "\t" + expr + "\t" + strand
+                    print chr + "\t" + str(pos-span-1) + "\t" + str(pos+span-1) + "\t" + t +"__5don__exon-"+str(pos)+"]5pss-intron" + "\t" + expr + "\t" + strand + "\t" + str(float(exon[2]))
 
 
 parser = argparse.ArgumentParser(description='EXON to BED')
