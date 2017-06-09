@@ -22,6 +22,7 @@ import model_eval
 parser = argparse.ArgumentParser(description='Train Model')
 parser.add_argument('-e','--eid', help='sample eid',required=True)
 parser.add_argument('-s','--span', help='span',required=True)
+parser.add_argument('-p','--path', help='path to npy data',required=True)
 
 group = parser.add_mutually_exclusive_group(required=False)
 group.add_argument('--full', dest='feature', action='store_true')
@@ -34,6 +35,7 @@ args = parser.parse_args()
 
 EID = args.eid
 SPAN = args.span
+PATH = args.path
 
 HIDDEN_SIZE = 4*int(SPAN)
 DROPOUT = 0.3
@@ -46,11 +48,11 @@ MODEL_NAME = 'splicing_model_lstm1'
 if args.feature:
     print "Loading Full Dataset"
     MODEL_NAME = MODEL_NAME+"_"+EID+"_full"
-    _, inputX, inputY = preproc_loadData.loadData(EID,SPAN)
+    _, inputX, inputY = preproc_loadData.loadData(EID,SPAN,PATH)
 else:
     print "Loading Core Dataset"
     MODEL_NAME = MODEL_NAME+"_"+EID+"_core"
-    inputX, _, inputY = preproc_loadData.loadData(EID,SPAN)
+    inputX, _, inputY = preproc_loadData.loadData(EID,SPAN,PATH)
 
 ### SPLIT DATA ###
 
