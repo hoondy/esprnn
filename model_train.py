@@ -9,9 +9,8 @@ __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
 import argparse, sys
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Merge
-from keras.layers import LSTM, GRU, SimpleRNN
+from keras import layers
+from keras import models
 import model_eval
 import numpy as np
 
@@ -37,7 +36,7 @@ args = parser.parse_args()
 HIDDEN_SIZE = 4*int(args.span)
 DROPOUT = 0.3
 BATCH_SIZE = 100
-EPOCHS = 20
+EPOCHS = 50
 MODEL_NAME = args.name
 
 ### LOAD DATA ###
@@ -71,18 +70,18 @@ if args.model=="LSTM":
 
     print('Building LSTM model...')
 
-    intron_exon = Sequential()
-    intron_exon.add(LSTM(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_3acc.shape[1], input_3acc.shape[2])))
+    intron_exon_input = layers.Input(shape=(input_3acc.shape[1], input_3acc.shape[2]), name="intron_exon_3acc")
+    intron_exon_rnn = layers.LSTM(HIDDEN_SIZE/2, return_sequences=True)(intron_exon_input)
 
-    exon_intron = Sequential()
-    exon_intron.add(LSTM(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_5don.shape[1], input_5don.shape[2])))
+    exon_intron_input = layers.Input(shape=(input_5don.shape[1], input_5don.shape[2]), name="exon_intron_5don")
+    exon_intron_rnn = layers.LSTM(HIDDEN_SIZE/2, return_sequences=True)(exon_intron_input)
 
-    model = Sequential()
-    model.add(Merge([intron_exon, exon_intron], mode='concat'))
-    model.add(LSTM(HIDDEN_SIZE, return_sequences=False))
-    model.add(Dropout(DROPOUT))
-    model.add(Dense(inputY.shape[1], activation='softmax'))
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged_rnn = layers.LSTM(HIDDEN_SIZE, return_sequences=False)(merged)
+    merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
+    merged_output = layers.Dense(inputY.shape[1], activation='softmax')(merged_dropout)
 
+    model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
     model.summary()
 
@@ -90,18 +89,18 @@ elif args.model=="GRU":
 
     print('Building GRU model...')
 
-    intron_exon = Sequential()
-    intron_exon.add(GRU(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_3acc.shape[1], input_3acc.shape[2])))
+    intron_exon_input = layers.Input(shape=(input_3acc.shape[1], input_3acc.shape[2]), name="intron_exon_3acc")
+    intron_exon_rnn = layers.GRU(HIDDEN_SIZE/2, return_sequences=True)(intron_exon_input)
 
-    exon_intron = Sequential()
-    exon_intron.add(GRU(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_5don.shape[1], input_5don.shape[2])))
+    exon_intron_input = layers.Input(shape=(input_5don.shape[1], input_5don.shape[2]), name="exon_intron_5don")
+    exon_intron_rnn = layers.GRU(HIDDEN_SIZE/2, return_sequences=True)(exon_intron_input)
 
-    model = Sequential()
-    model.add(Merge([intron_exon, exon_intron], mode='concat'))
-    model.add(GRU(HIDDEN_SIZE, return_sequences=False))
-    model.add(Dropout(DROPOUT))
-    model.add(Dense(inputY.shape[1], activation='softmax'))
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged_rnn = layers.GRU(HIDDEN_SIZE, return_sequences=False)(merged)
+    merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
+    merged_output = layers.Dense(inputY.shape[1], activation='softmax')(merged_dropout)
 
+    model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
     model.summary()
 
@@ -109,18 +108,18 @@ elif args.model=="SimpleRNN":
 
     print('Building SimpleRNN model...')
 
-    intron_exon = Sequential()
-    intron_exon.add(SimpleRNN(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_3acc.shape[1], input_3acc.shape[2])))
+    intron_exon_input = layers.Input(shape=(input_3acc.shape[1], input_3acc.shape[2]), name="intron_exon_3acc")
+    intron_exon_rnn = layers.SimpleRNN(HIDDEN_SIZE/2, return_sequences=True)(intron_exon_input)
 
-    exon_intron = Sequential()
-    exon_intron.add(SimpleRNN(HIDDEN_SIZE/2, return_sequences=True, input_shape=(input_5don.shape[1], input_5don.shape[2])))
+    exon_intron_input = layers.Input(shape=(input_5don.shape[1], input_5don.shape[2]), name="exon_intron_5don")
+    exon_intron_rnn = layers.SimpleRNN(HIDDEN_SIZE/2, return_sequences=True)(exon_intron_input)
 
-    model = Sequential()
-    model.add(Merge([intron_exon, exon_intron], mode='concat'))
-    model.add(SimpleRNN(HIDDEN_SIZE, return_sequences=False))
-    model.add(Dropout(DROPOUT))
-    model.add(Dense(inputY.shape[1], activation='softmax'))
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged_rnn = layers.SimpleRNN(HIDDEN_SIZE, return_sequences=False)(merged)
+    merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
+    merged_output = layers.Dense(inputY.shape[1], activation='softmax')(merged_dropout)
 
+    model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
     model.summary()
 
