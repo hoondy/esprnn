@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 __author__ = "Donghoon Lee"
-__copyright__ = "Copyright 2016"
+__copyright__ = "Copyright 2017"
 __credits__ = ["Donghoon Lee"]
 __license__ = "GPL"
 __version__ = "1.0.0"
@@ -11,7 +11,7 @@ __email__ = "donghoon.lee@yale.edu"
 import argparse, sys
 from keras import layers
 from keras import models
-import model_eval
+import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -147,8 +147,7 @@ model.fit([X_train_3acc, X_train_5don], Y_train, epochs=EPOCHS, validation_data=
 
 ### SAVE DATA ###
 
-open(MODEL_NAME+'.yaml', 'w').write(model.to_yaml())
-model.save_weights(MODEL_NAME+'.h5')
+model_io(MODEL_NAME, model)
 
 ### EVALUATE ###
 

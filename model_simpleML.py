@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 __author__ = "Donghoon Lee"
-__copyright__ = "Copyright 2016"
+__copyright__ = "Copyright 2017"
 __credits__ = ["Donghoon Lee"]
 __license__ = "GPL"
 __version__ = "1.0.0"
@@ -12,7 +12,7 @@ import argparse, sys
 import model_eval
 import numpy as np
 from sklearn import svm,tree,neighbors,ensemble
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 from sklearn.model_selection import train_test_split
 
 ### Usage: python model_simpleML.py -n TEST -m SVM -p "/path/to/npyData"
@@ -96,11 +96,11 @@ print 'Accuracy Score:', accuracy_score(Y_test, predY)
 
 ### ROC AUC ###
 
-print 'Test ROC AUC:', model_eval.calcROC_AUC(Y_test, predY)
+print 'Test ROC AUC:', roc_auc_score(Y_test, predY)
 
 ### F1 ###
 
-print 'Test F1 Score:', model_eval.calcF1(Y_test, predY)
+print 'Test F1 Score:', f1_score(Y_test, predY)
 
 ### PLOT ROC AUC ###
 

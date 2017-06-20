@@ -8,31 +8,18 @@ __version__ = "1.0.0"
 __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
-from keras.models import model_from_json, model_from_yaml
-from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc
+import numpy as np
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import numpy as np
+
+from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc
 from sklearn.preprocessing import label_binarize
-
-def loadModel(MODEL_NAME):
-
-    print('Loading Model..')
-
-    model = model_from_yaml(open(MODEL_NAME+'.yaml').read())
-    model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
-    model.load_weights(MODEL_NAME+'.h5')
-    model.summary()
-
-    print('Done')
-
-    return model
 
 def predModel(model, inputX):
 
-    predY = model.predict(inputX, batch_size=100, verbose=1)
-    return predY
+    return model.predict(inputX, batch_size=100, verbose=1)
 
 def calcROC_AUC(inputY, predY):
 
