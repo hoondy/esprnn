@@ -10,11 +10,13 @@ __email__ = "donghoon.lee@yale.edu"
 
 import argparse, sys
 import numpy as np
+from sklearn.preprocessing import label_binarize
 
 def bed2npy(bed_file, npy_file):
 
-    raw_list_cat=[]
     raw_list_id=[]
+    raw_list_cat=[]
+
     proc_list_cat = []
 
     with open(bed_file, 'r') as f:
@@ -41,9 +43,11 @@ def bed2npy(bed_file, npy_file):
             print "ID1 != ID2", id1, id2
             sys.exit(1)
 
-    Y = np.zeros((len(proc_list_cat), len(set(proc_list_cat))), dtype=np.uint8)
-    for i, seq in enumerate(proc_list_cat):
-        Y[i, proc_list_cat[i]] = 1
+    # Y = np.zeros(len(proc_list_cat), dtype=np.uint8)
+    # for i, seq in enumerate(proc_list_cat):
+    #     Y[i] = proc_list_cat[i]
+
+    Y = label_binarize(proc_list_cat,classes=[0,1])
 
     print Y.shape
     print Y

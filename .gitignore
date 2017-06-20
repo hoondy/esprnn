@@ -1,2 +1,14 @@
 
 *.npy
+
+*.yaml
+
+*.png
+
+*.h5
+
+*.out
+
+*.bed
+
+*.pyc
