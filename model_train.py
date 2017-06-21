@@ -147,7 +147,7 @@ model.fit([X_train_3acc, X_train_5don], Y_train, epochs=EPOCHS, validation_data=
 
 ### SAVE DATA ###
 
-model_io(MODEL_NAME, model)
+model_io.saveModel(MODEL_NAME, model)
 
 ### EVALUATE ###
 
@@ -162,12 +162,13 @@ model_eval.save2npy(MODEL_NAME+"_predY.npy",predY)
 
 ### ROC AUC ###
 
-print 'Test ROC AUC:', model_eval.calcROC_AUC(Y_test, predY)
+print 'Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, predY)
 
 ### F1 SCORE ###
 
-print 'Test F1 Score:', model_eval.calcF1(Y_test, predY)
+print 'Test F1 Score:', model_eval.calc_f1_score(Y_test, predY)
 
 ### PLOT ROC AUC ###
 
-model_eval.plotROC_AUC(Y_test, predY, MODEL_NAME)
+model_eval.plot_roc_auc(Y_test, predY, MODEL_NAME)
+

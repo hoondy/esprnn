@@ -12,7 +12,6 @@ import argparse, sys
 import model_eval
 import numpy as np
 from sklearn import svm,tree,neighbors,ensemble
-from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 from sklearn.model_selection import train_test_split
 
 ### Usage: python model_simpleML.py -n TEST -m SVM -p "/path/to/npyData"
@@ -65,9 +64,12 @@ Y_test = Y_test[:,-1]
 
 ### Sub-sampling
 
-# trainsize = 5000
+# trainsize = 500
 # X_train = X_train[:trainsize]
 # Y_train = Y_train[:trainsize]
+#
+# print X_train.shape
+# print Y_train.shape
 
 ### CLASSIFICATION ###
 
@@ -92,19 +94,19 @@ print 'Test Score:', classifier.score(X_test, Y_test)
 ### PREDICT ###
 
 predY = classifier.predict(X_test)
-print 'Accuracy Score:', accuracy_score(Y_test, predY)
+print 'Accuracy Score:', model_eval.calc_accuracy_score(Y_test, predY)
 
 ### ROC AUC ###
 
-print 'Test ROC AUC:', roc_auc_score(Y_test, predY)
+print 'Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, predY)
 
 ### F1 ###
 
-print 'Test F1 Score:', f1_score(Y_test, predY)
+print 'Test F1 Score:', model_eval.calc_f1_score(Y_test, predY)
 
 ### PLOT ROC AUC ###
 
-model_eval.plotROC_AUC(Y_test, predY, "SimpleML_"+args.model)
+model_eval.plot_roc_auc(Y_test, predY, "SimpleML_"+args.model)
 
 
 

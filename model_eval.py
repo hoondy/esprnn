@@ -14,33 +14,26 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc
+from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc, accuracy_score
 from sklearn.preprocessing import label_binarize
 
 def predModel(model, inputX):
 
     return model.predict(inputX, batch_size=100, verbose=1)
 
-def calcROC_AUC(inputY, predY):
+def calc_accuracy_score(trueY, predY):
 
-    roc_auc = roc_auc_score(inputY, predY)
-    return roc_auc
+    return accuracy_score(trueY, predY)
 
-def calcF1(inputY, predY):
+def calc_roc_auc_score(trueY, predY):
 
-    if len(inputY.shape)>1 and len(predY.shape)>1:
-        print inputY.shape, predY.shape
-        y_true = inputY[:,1]==1
-        y_pred = predY[:,1]>0.5
-    else:
-        y_true = inputY
-        y_pred = predY>0.5
+    return roc_auc_score(trueY, predY)
 
-    f1 = f1_score(y_true, y_pred)
+def calc_f1_score(trueY, predY):
 
-    return f1
+    return f1_score(trueY, predY, average='macro')
 
-def plotROC_AUC(inputY, predY, MODEL_NAME):
+def plot_roc_auc(trueY, predY, MODEL_NAME):
 
     ##############################################################################
     # Compute ROC curve and ROC area for each class
@@ -48,13 +41,13 @@ def plotROC_AUC(inputY, predY, MODEL_NAME):
     tpr = dict()
     roc_auc = dict()
 
-    inputY = label_binarize(inputY, classes=[0, 1])
+    trueY = label_binarize(trueY, classes=[0, 1])
     predY = label_binarize(predY, classes=[0, 1])
 
-    n_classes = inputY.shape[1]
+    n_classes = trueY.shape[1]
 
     for i in range(n_classes):
-        fpr[i], tpr[i], _ = roc_curve(inputY[:, i], predY[:, i])
+        fpr[i], tpr[i], _ = roc_curve(trueY[:, i], predY[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
 
     ##############################################################################
