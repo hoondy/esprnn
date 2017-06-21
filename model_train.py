@@ -171,4 +171,3 @@ print 'Test F1 Score:', model_eval.calc_f1_score(Y_test, predY)
 ### PLOT ROC AUC ###
 
 model_eval.plot_roc_auc(Y_test, predY, MODEL_NAME)
-

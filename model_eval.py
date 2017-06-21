@@ -23,15 +23,33 @@ def predModel(model, inputX):
 
 def calc_accuracy_score(trueY, predY):
 
+    trueY = label_binarize(trueY, classes=[0, 1])
+    predY = label_binarize(predY, classes=[0, 1])
+
+    trueY = trueY[:,trueY.shape[1]-1]
+    predY = predY[:,predY.shape[1]-1]
+
     return accuracy_score(trueY, predY)
 
 def calc_roc_auc_score(trueY, predY):
+
+    trueY = label_binarize(trueY, classes=[0, 1])
+    predY = label_binarize(predY, classes=[0, 1])
+
+    trueY = trueY[:,trueY.shape[1]-1]
+    predY = predY[:,predY.shape[1]-1]
 
     return roc_auc_score(trueY, predY)
 
 def calc_f1_score(trueY, predY):
 
-    return f1_score(trueY, predY, average='macro')
+    trueY = label_binarize(trueY, classes=[0, 1])
+    predY = label_binarize(predY, classes=[0, 1])
+
+    trueY = trueY[:,trueY.shape[1]-1]
+    predY = predY[:,predY.shape[1]-1]
+
+    return f1_score(trueY, predY)
 
 def plot_roc_auc(trueY, predY, MODEL_NAME):
 
