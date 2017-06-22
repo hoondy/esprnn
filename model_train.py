@@ -23,9 +23,11 @@ parser = argparse.ArgumentParser(description='Train Model')
 
 parser.add_argument('-n','--name', help='model name',required=True)
 parser.add_argument('-m','--model', help='RNN model: LSTM,GRU,SimpleRNN',required=True)
+
 parser.add_argument('-s','--span', help='span size from splice site',required=True, type=int)
-parser.add_argument('-p','--path', help='path to npy data',required=True)
 parser.add_argument('-e','--epoch', help='epoch',required=False, type=int, default=20)
+
+parser.add_argument('-p','--path', help='path to npy data',required=True)
 parser.add_argument('-x','--input', help='input npy list, comma-separated',required=True)
 parser.add_argument('-y','--output', help='output npy',required=True)
 

@@ -22,6 +22,7 @@ parser = argparse.ArgumentParser(description='Train Model')
 
 parser.add_argument('-n','--name', help='model name',required=True)
 parser.add_argument('-m','--model', help='ML model: SVM,TREE,KNN,RF',required=True)
+
 parser.add_argument('-p','--path', help='path to npy data',required=True)
 parser.add_argument('-x','--input', help='input npy list, comma-separated',required=True)
 parser.add_argument('-y','--output', help='output npy',required=True)
