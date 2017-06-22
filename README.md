@@ -27,3 +27,8 @@ python preproc_fa2npy.py -i XXX_exonDef_ss_50.fa -o XXX-DNA.exonDef_ss_50.npy
 bwtool extract bed XXX.pval.signal.bigwig XXX.exonDef_ss_50.matrix
 python preproc_matrix2npy.py -i XXX.exonDef_ss_50.matrix -o XXX.exonDef_ss_50.npy -m 2
 ```
+
+### Train LSTM model
+```
+python model_train.py -n LIVER_S50_ALL -m LSTM -s 50 -p /path/to/npyData -x DNA.exonDef_ss_50.npy,H3K27ac.exonDef_ss_50.npy,H3K27me3.exonDef_ss_50.npy,H3K36me3.exonDef_ss_50.npy,H3K4me1.exonDef_ss_50.npy,H3K4me3.exonDef_ss_50.npy,H3K9ac.exonDef_ss_50.npy,H3K9me3.exonDef_ss_50.npy,Methylation.exonDef_ss_50.npy -y EXP.exonDef_ss_50.npy
+```
