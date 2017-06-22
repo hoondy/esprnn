@@ -64,7 +64,7 @@ Y_test = Y_test[:,-1]
 
 ### Sub-sampling
 
-# trainsize = 500
+# trainsize = 1000
 # X_train = X_train[:trainsize]
 # Y_train = Y_train[:trainsize]
 #
@@ -74,7 +74,7 @@ Y_test = Y_test[:,-1]
 ### CLASSIFICATION ###
 
 if args.model=="SVM":
-    classifier = svm.SVC()
+    classifier = svm.SVC(kernel='rbf')
 elif args.model=="TREE":
     classifier = tree.DecisionTreeClassifier()
 elif args.model=="KNN":
@@ -93,20 +93,22 @@ print 'Test Score:', classifier.score(X_test, Y_test)
 
 ### PREDICT ###
 
-predY = classifier.predict(X_test)
-print 'Accuracy Score:', model_eval.calc_accuracy_score(Y_test, predY)
+predY = classifier.predict_proba(X_test) # predict as probability
+trueY = np.stack((Y_test==0,Y_test==1),axis=1).astype(int)
+
+print 'Accuracy Score:', model_eval.calc_accuracy_score(trueY, predY)
 
 ### ROC AUC ###
 
-print 'Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, predY)
+print 'Test ROC AUC:', model_eval.calc_roc_auc_score(trueY, predY)
 
 ### F1 ###
 
-print 'Test F1 Score:', model_eval.calc_f1_score(Y_test, predY)
+print 'Test F1 Score:', model_eval.calc_f1_score(trueY, predY)
 
 ### PLOT ROC AUC ###
 
-model_eval.plot_roc_auc(Y_test, predY, "SimpleML_"+args.model)
+model_eval.plot_roc_auc(trueY, predY, "SimpleML_"+args.model)
 
 
 
