@@ -57,9 +57,9 @@ def plot_roc_auc(trueY, predY, MODEL_NAME):
     plt.ylabel('True Positive Rate')
     plt.title('ROC curve of '+MODEL_NAME)
     plt.legend(loc="lower right")
-    plt.savefig(MODEL_NAME+'.png')
+    plt.savefig(MODEL_NAME+'.pdf',format='pdf')
 
-    print 'Saved',MODEL_NAME+'.png'
+    print 'Saved',MODEL_NAME+'.pdf'
 
 def save2npy(fileName, var):
     np.save(fileName, var)

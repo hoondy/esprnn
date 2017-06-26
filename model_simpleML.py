@@ -77,11 +77,11 @@ Y_test = Y_test[:,-1]
 if args.model=="SVM":
     classifier = svm.SVC(kernel='rbf', probability=True)
 elif args.model=="TREE":
-    classifier = tree.DecisionTreeClassifier()
+    classifier = tree.DecisionTreeClassifier(max_depth=5)
 elif args.model=="KNN":
-    classifier = neighbors.KNeighborsClassifier(n_neighbors=5)
+    classifier = neighbors.KNeighborsClassifier(n_neighbors=2)
 elif args.model=="RF":
-    classifier = ensemble.RandomForestClassifier(n_estimators=10)
+    classifier = ensemble.RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
 else:
     print "Model not found: select one of SVM, TREE, KNN, or RF models"
     sys.exit(1)
@@ -109,4 +109,4 @@ print 'Test F1 Score:', model_eval.calc_f1_score(trueY, predY)
 
 ### PLOT ROC AUC ###
 
-model_eval.plot_roc_auc(trueY, predY, "SimpleML_"+args.model)
+model_eval.plot_roc_auc(trueY, predY, "SimpleML_"+MODEL_NAME+"_"++args.model)
