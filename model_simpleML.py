@@ -109,4 +109,4 @@ print 'Test F1 Score:', model_eval.calc_f1_score(trueY, predY)
 
 ### PLOT ROC AUC ###
 
-model_eval.plot_roc_auc(trueY, predY, "SimpleML_"+MODEL_NAME+"_"++args.model)
+model_eval.plot_roc_auc(trueY, predY, "SimpleML_"+MODEL_NAME+"_"+args.model)
