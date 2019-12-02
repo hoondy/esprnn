@@ -59,7 +59,7 @@ def dna_onehot_encoding(list_seq):
     ### one-hot encoding
     for i, seq in enumerate(list_seq):
         for j, nuc in enumerate(seq):
-            if nuc != 'N':
+            if nuc in nt_idx.keys():
                 X[i,j,nt_idx[nuc]] = 1
     return X
 
