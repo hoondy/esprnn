@@ -19,7 +19,6 @@ parser = argparse.ArgumentParser(description='BW to NPY')
 parser.add_argument('-i','--bigwig', help='input bigWig file',required=True)
 parser.add_argument('-b','--bed',help='bed file', required=True)
 parser.add_argument('-p','--prefix',help='output prefix', required=True)
-parser.add_argument('-m','--max',help='max cutoff', required=False)
 args = parser.parse_args()
 
 def sigmoid(x):
@@ -27,26 +26,28 @@ def sigmoid(x):
 
 def bw2npy(bw_file, bed_file, npy_file):
 
-    tmp = []
     bw = pyBigWig.open(bw_file)
     bed=pd.read_csv(bed_file,sep='\t',header=None)
+    span=int(bed.loc[0,2])-int(bed.loc[0,1])
+
+    X = np.zeros((bed.shape[0], span, 1), dtype=np.float_) # set array of zeros with dim: n_sample, exon span, 1
 
     for i in range(bed.shape[0]):
         # if positive strand, store sigmoid normalized signal value
         if bed.loc[i,5]=='+':
-            tmp.append([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
+            tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
+            np.nan_to_num(tmp)
+            np.around(tmp, decimals=2)
+            X[i,:,0]=tmp
+
         # if negative strand, reverse signal value
         else:
-            tmp.append([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
+            tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
+            np.nan_to_num(tmp)
+            np.around(tmp, decimals=2)
+            X[i,:,0]=tmp
 
     bw.close()
-
-    maxlen = max(map(len, tmp)) # apply len to all seq, find max length
-
-    X = np.zeros((len(tmp), maxlen, 1), dtype=np.float_) # set array of zeros with dim: n_sample, exon span, 1
-    for i, seq in enumerate(tmp):
-        for j, val in enumerate(seq):
-            X[i,j,0]=float(val)
 
     # normalize data
     min_max_scaler = preprocessing.MinMaxScaler()
