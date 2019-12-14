@@ -22,7 +22,7 @@ parser.add_argument('-p','--prefix',help='output prefix', required=True)
 args = parser.parse_args()
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-2*(x-2))) #k=2, x0=2
+    return 1 / (1 + math.exp(-1*(x-1))) #k=1, x0=1
 
 def bw2npy(bw_file, bed_file, npy_file):
 
@@ -37,14 +37,12 @@ def bw2npy(bw_file, bed_file, npy_file):
         if bed.loc[i,5]=='+':
             tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
             np.nan_to_num(tmp)
-            np.around(tmp, decimals=2)
             X[i,:,0]=tmp
 
         # if negative strand, reverse signal value
         else:
             tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
             np.nan_to_num(tmp)
-            np.around(tmp, decimals=2)
             X[i,:,0]=tmp
 
     bw.close()
@@ -52,6 +50,8 @@ def bw2npy(bw_file, bed_file, npy_file):
     # normalize data
     min_max_scaler = preprocessing.MinMaxScaler()
     X[:,:,0] = min_max_scaler.fit_transform(X[:,:,0])
+
+    X=np.around(X, decimals=4)
 
     print(X.shape)
     print(X)
