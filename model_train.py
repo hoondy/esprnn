@@ -107,13 +107,13 @@ else:
 merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
 merged_output = layers.Dense(1, activation='sigmoid')(merged_dropout)
 model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
-model.compile(loss='mean_squared_error',optimizer='adam',metrics=['mean_squared_error','accuracy'])
+model.compile(loss='mean_squared_error',optimizer='adam',metrics=['accuracy'])
 model.summary()
 
 ### TRAIN ###
 
 print('Train...')
-history = model.fit([X_train[:100000,:2*SPAN,:], X_train[:100000,2*SPAN:,:]], Y_train[:100000], epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
+history = model.fit([X_train[:,:2*SPAN,:], X_train[:,2*SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
 
 ### PLOT LOSS ###
 
