@@ -32,25 +32,25 @@ def bed2npy(bed_file, npy_file):
 
          ### sanity check
         if not id1.split("__")[0]+id1.split("__")[1]+id1.split("__")[2] == id2.split("__")[0]+id2.split("__")[1]+id2.split("__")[2]:
-            print "3'SS ID does not match 5'SS ID", id1, id2
+            print("3'SS ID does not match 5'SS ID", id1, id2)
             sys.exit(1)
 
         if cat1 == cat2:
             proc_list_cat.append(int(cat1))
         else:
-            print "ID1 != ID2", id1, id2
+            print("ID1 != ID2", id1, id2)
             sys.exit(1)
 
     Y = np.zeros((len(proc_list_cat), len(set(proc_list_cat))), dtype=np.uint8)
     for i, seq in enumerate(proc_list_cat):
         Y[i, proc_list_cat[i]] = 1
 
-    print Y.shape
-    print Y
+    print(Y.shape)
+    print(Y)
     np.save(npy_file,Y)
 
-    print "File",npy_file,"Saved"
-    print "Done"
+    print("File",npy_file,"Saved")
+    print("Done")
 
 parser = argparse.ArgumentParser(description='BED to NPY')
 parser.add_argument('-i','--input', help='input file',required=True)

@@ -9,7 +9,6 @@ __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
 import numpy as np
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -59,8 +58,8 @@ def plot_roc_auc(trueY, predY, MODEL_NAME):
     plt.legend(loc="lower right")
     plt.savefig(MODEL_NAME+'.pdf',format='pdf')
 
-    print 'Saved',MODEL_NAME+'.pdf'
+    print('Saved',MODEL_NAME+'.pdf')
 
 def save2npy(fileName, var):
     np.save(fileName, var)
-    print "File",fileName,"Saved"
+    print("File",fileName,"Saved")
