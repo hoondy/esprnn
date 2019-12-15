@@ -15,13 +15,10 @@ import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
 import h5py
-import matplotlib.pyplot as plt
 
-### Usage: python model_train.py -n TEST -m LSTM -s 100 -p "/path/to/npyData" -e 50
-### -x E123-DNA.exonDef_ss_100.npy,E123-DNase.exonDef_ss_100.npy,E123-H3K27me3.exonDef_ss_100.npy,E123-H3K4me3.exonDef_ss_100.npy
-### -y E123-EXP.exonDef_ss_100.npy
+### Usage: python model_train.py --prefix K562_LSTM_200span --input K562_input.hdf5 --model LSTM --span 200
 
-parser = argparse.ArgumentParser(description='Train Model')
+parser = argparse.ArgumentParser(description='Train RNN Model')
 
 parser.add_argument('-p','--prefix', help='prefix for output files',required=True)
 parser.add_argument('-x','--input', help='input HDF5 data',required=True)
@@ -116,7 +113,7 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-history = model.fit([X_train[:100000,:2*SPAN,:], X_train[:100000,2*SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
+history = model.fit([X_train[:100000,:2*SPAN,:], X_train[:100000,2*SPAN:,:]], Y_train[:100000], epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
 
 ### PLOT LOSS ###
 
