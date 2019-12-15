@@ -11,7 +11,7 @@ __email__ = "donghoon.lee@yale.edu"
 import argparse, sys
 from keras import layers
 from keras import models
-from . import model_eval, model_io
+import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
 import h5py
