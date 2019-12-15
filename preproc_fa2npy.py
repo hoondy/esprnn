@@ -70,9 +70,9 @@ def fa2npy(fa_file, npy_file):
     print(X.shape)
     print(X)
 
-    np.savez(npy_file,X)
+    np.save(npy_file,X)
 
     print("File",npy_file,"Saved")
     print("Done")
 
-fa2npy(args.input, args.prefix+'.npz')
+fa2npy(args.input, args.prefix+'.npy')
