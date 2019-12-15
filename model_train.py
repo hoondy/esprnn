@@ -24,7 +24,6 @@ parser = argparse.ArgumentParser(description='Train Model')
 
 parser.add_argument('-n','--name', help='model name',required=True)
 parser.add_argument('-x','--input', help='input HDF5 data',required=True)
-parser.add_argument('-y','--output', help='output npy',required=True)
 
 parser.add_argument('-m','--model', help='RNN model: LSTM,GRU,SimpleRNN',required=False, default="LSTM")
 parser.add_argument('-s','--span', help='span size from splice site',required=False, type=int, default=200)
