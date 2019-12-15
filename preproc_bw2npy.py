@@ -56,9 +56,9 @@ def bw2npy(bw_file, bed_file, npy_file):
     print(X.shape)
     print(X)
 
-    np.save(npy_file,X)
+    np.savez(npy_file,X)
 
     print("File",npy_file,"Saved")
     print("Done")
 
-bw2npy(args.bigwig, args.bed, args.prefix+".npy")
+bw2npy(args.bigwig, args.bed, args.prefix+".npz")
