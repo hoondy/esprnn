@@ -46,27 +46,27 @@ print("Splitting data into train and test set")
 
 with h5py.File(args.input, 'r') as f:
     X_train, X_test, Y_train, Y_test = train_test_split(np.array(f['x']), np.array(f['y']), test_size=0.2, random_state=38)
-X_test, X_val, Y_test, Y_val = train_test_split(X_test, Y_test, test_size=0.5, random_state=38)
+# X_test, X_val, Y_test, Y_val = train_test_split(X_test, Y_test, test_size=0.5, random_state=38)
 
 print("Train set size:",len(X_train))
 print("Test set size:",len(X_test))
-print("Validation set size:",len(X_val))
+# print("Validation set size:",len(X_val))
 
 ### SPLIT DATA ###
 
-def splitInput(input):
-
-    input_3acc = input[:,:2*args.span,:]
-    input_5don = input[:,2*args.span:,:]
-
-    print("3'ss X:",input_3acc.shape)
-    print("5'ss X:",input_5don.shape)
-
-    return input_3acc,input_5don
-
-X_train_3acc, X_train_5don = splitInput(X_train)
-X_test_3acc, X_test_5don = splitInput(X_test)
-X_val_3acc, X_val_5don = splitInput(X_val)
+# def splitInput(input):
+#
+#     input_3acc = input[:,:2*args.span,:]
+#     input_5don = input[:,2*args.span:,:]
+#
+#     print("3'ss X:",input_3acc.shape)
+#     print("5'ss X:",input_5don.shape)
+#
+#     return input_3acc,input_5don
+#
+# X_train_3acc, X_train_5don = splitInput(X_train)
+# X_test_3acc, X_test_5don = splitInput(X_test)
+# X_val_3acc, X_val_5don = splitInput(X_val)
 
 ### BUILD MODEL ###
 
@@ -134,7 +134,8 @@ else:
 ### TRAIN ###
 
 print('Train...')
-model.fit([X_train[:,:2*args.span,:], X_train[:,2*args.span:,:]], Y_train, epochs=EPOCHS, validation_data=([X_test[:,:2*args.span,:], X_test[:,2*args.span:,:]], Y_test), batch_size=BATCH_SIZE, verbose=2)
+# model.fit([X_train[:,:2*args.span,:], X_train[:,2*args.span:,:]], Y_train, epochs=EPOCHS, validation_data=([X_test[:,:2*args.span,:], X_test[:,2*args.span:,:]], Y_test), batch_size=BATCH_SIZE, verbose=1)
+model.fit([X_train[:,:2*args.span,:], X_train[:,2*args.span:,:]], Y_train, epochs=EPOCHS, validation_split=0.2, batch_size=BATCH_SIZE, verbose=1)
 # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
 
 ### SAVE DATA ###
@@ -143,13 +144,13 @@ model_io.saveModel(MODEL_NAME, model)
 
 ### EVALUATE ###
 
-loss, acc = model.evaluate([X_val[:,:2*args.span,:], X_val[:,2*args.span:,:]], Y_val, batch_size=BATCH_SIZE, verbose=1)
+loss, acc = model.evaluate([X_test[:,:2*args.span,:], X_test[:,2*args.span:,:]], Y_test, batch_size=BATCH_SIZE, verbose=1)
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
 
 ### PREDICT ###
 
-predY = model.predict([X_test_3acc, X_test_5don], batch_size=BATCH_SIZE, verbose=1)
+predY = model.predict([X_test[:,:2*args.span,:], X_test[:,2*args.span:,:]], batch_size=BATCH_SIZE, verbose=1)
 model_eval.save2npy(MODEL_NAME+"_predY.npy",predY)
 
 ### ROC AUC ###
