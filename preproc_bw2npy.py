@@ -36,13 +36,13 @@ def bw2npy(bw_file, bed_file, npy_file):
         # if positive strand, store sigmoid normalized signal value
         if bed.loc[i,5]=='+':
             tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
-            np.nan_to_num(tmp)
+            tmp=np.nan_to_num(tmp)
             X[i,:,0]=tmp
 
         # if negative strand, reverse signal value
         else:
             tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
-            np.nan_to_num(tmp)
+            tmp=np.nan_to_num(tmp)
             X[i,:,0]=tmp
 
     bw.close()
