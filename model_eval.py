@@ -17,32 +17,24 @@ from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc, accuracy_sc
 from sklearn.metrics import average_precision_score, precision_recall_curve
 
 def predModel(model, inputX, BATCH_SIZE=100, VERBOSE=1):
-
     return model.predict(inputX, batch_size=BATCH_SIZE, verbose=VERBOSE)
 
 def calc_accuracy_score(Y_true, Y_pred, threshold=0.5):
-
     Y_true = Y_true[:,-1]
     Y_pred = np.array(Y_pred[:,-1]>threshold).astype(int)
-
     return accuracy_score(Y_true, Y_pred)
 
 def calc_f1_score(Y_true, Y_pred, threshold=0.5):
-
     Y_true = Y_true[:,-1]
     predY = np.array(Y_pred[:,-1]>threshold).astype(int)
-
     return f1_score(Y_true, predY)
 
 def calc_roc_auc_score(Y_true, Y_pred):
-
     Y_true = Y_true[:,-1]
     Y_pred = Y_pred[:,-1]
-
     return roc_auc_score(Y_true, Y_pred)
 
 def plot_roc(trueY, predY, PREFIX):
-
     # Compute ROC curve and ROC area
     fpr, tpr, _ = roc_curve(trueY[:,-1], predY[:,-1])
     roc_auc = auc(fpr, tpr)

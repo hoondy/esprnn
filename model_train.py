@@ -121,7 +121,7 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-history = model.fit([X_train[:1000,:2*SPAN,:], X_train[:1000,2*SPAN:,:]], Y_train[:1000], epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
+history = model.fit([X_train[:10000,:2*SPAN,:], X_train[:10000,2*SPAN:,:]], Y_train[:10000], epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
 
 ### PLOT LOSS ###
 
@@ -133,28 +133,22 @@ model_io.saveModel(PREFIX, model)
 
 ### EVALUATE ###
 
-loss, acc = model.evaluate([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
+loss, acc = model.evaluate([X_test[:10000,:2*SPAN,:], X_test[:10000,2*SPAN:,:]], Y_test[:10000], batch_size=BATCH_SIZE, verbose=VERBOSE)
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
-print('Test R2:', r2)
+# print('Test R2:', r2)
 
 ### PREDICT ###
 
-Y_pred = model.predict([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
+Y_pred = model.predict([X_test[:10000,:2*SPAN,:], X_test[:10000,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
 model_io.save2npy(PREFIX+"_Y_pred.npy",Y_pred)
 
-### ROC AUC ###
+### PLOT ROC curve ###
 
+model_eval.plot_roc(Y_test[:10000], Y_pred, PREFIX)
 print('Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, Y_pred))
 
-### F1 SCORE ###
+### PLOT PR curve ###
 
+model_eval.plot_pr(Y_test[:10000], Y_pred, PREFIX)
 print('Test F1 Score:', model_eval.calc_f1_score(Y_test, Y_pred))
-
-### PLOT ROC AUC ###
-
-model_eval.plot_roc_auc(Y_test, Y_pred, PREFIX)
-
-### PLOT PR AUC ###
-
-model_eval.plot_pr_auc(Y_test, Y_pred, PREFIX)
