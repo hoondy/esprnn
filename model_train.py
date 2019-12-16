@@ -11,6 +11,7 @@ __email__ = "donghoon.lee@yale.edu"
 import argparse, sys
 from keras import layers
 from keras import models
+from keras import backend as K
 import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -55,6 +56,13 @@ print("BATCH_SIZE:",str(BATCH_SIZE))
 print("RANDOM_STATE:",str(RANDOM_STATE))
 print("TEST_SIZE:",str(TEST_SIZE))
 print("VERBOSE:",str(VERBOSE))
+
+### R2 metric ###
+
+def r2(y_true, y_pred):
+    SS_res=K.sum(K.square(y_true-y_pred ))
+    SS_tot=K.sum(K.square(y_true-K.mean(y_true)))
+    return (1-SS_res/(SS_tot + K.epsilon())) # K.epsilon() is 1E-8, to avoid division by zero
 
 ### TRAIN TEST SPLIT ###
 
@@ -107,7 +115,7 @@ else:
 merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
 merged_output = layers.Dense(1, activation='sigmoid')(merged_dropout)
 model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
-model.compile(loss='mean_squared_error',optimizer='adam',metrics=['accuracy'])
+model.compile(loss='mse',optimizer='adam',metrics=['acc',r2])
 model.summary()
 
 ### TRAIN ###
@@ -131,17 +139,26 @@ print('Test Accuracy:', acc)
 
 ### PREDICT ###
 
-predY = model.predict([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
-model_eval.save2npy(PREFIX+"_predY.npy",predY)
+Y_pred = model.predict([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
+model_io.save2npy(PREFIX+"_Y_pred.npy",Y_pred)
 
-### ROC AUC ###
+regression=True
+if regression:
 
-print('Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, predY))
+    ### R2 SCORE ###
 
-### F1 SCORE ###
+    print('Test R2 Score:', model_eval.calc_r2_score(Y_test, Y_pred))
 
-print('Test F1 Score:', model_eval.calc_f1_score(Y_test, predY))
+else:
 
-### PLOT ROC AUC ###
+    ### ROC AUC ###
 
-model_eval.plot_roc_auc(Y_test, predY, PREFIX)
+    print('Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, Y_pred))
+
+    ### F1 SCORE ###
+
+    print('Test F1 Score:', model_eval.calc_f1_score(Y_test, Y_pred))
+
+    ### PLOT ROC AUC ###
+
+    model_eval.plot_roc_auc(Y_test, Y_pred, PREFIX)

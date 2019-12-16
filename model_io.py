@@ -9,6 +9,7 @@ __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
 from keras.models import model_from_json, model_from_yaml
+import numpy as np
 
 def loadModel(MODEL_NAME):
 
@@ -27,3 +28,7 @@ def saveModel(MODEL_NAME, model):
 
     open(MODEL_NAME+'.yaml', 'w').write(model.to_yaml())
     model.save_weights(MODEL_NAME+'.h5')
+
+def save2npy(fileName, var):
+    np.save(fileName, var)
+    print("File",fileName,"Saved")
