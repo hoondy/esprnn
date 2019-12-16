@@ -73,7 +73,6 @@ def calc_r2_score(Y_true, Y_pred):
     return r2_score(Y_true, Y_pred)
 
 def plot_pr(Y_true, Y_pred, PREFIX):
-
     lines = []
     labels = []
 
