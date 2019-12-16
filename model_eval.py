@@ -14,6 +14,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import roc_auc_score, f1_score, roc_curve, auc, accuracy_score, r2_score
+from sklearn.metrics import average_precision_score, precision_recall_curve
 
 def predModel(model, inputX, BATCH_SIZE=100, VERBOSE=1):
 
@@ -40,7 +41,7 @@ def calc_roc_auc_score(Y_true, Y_pred):
 
     return roc_auc_score(Y_true, Y_pred)
 
-def plot_roc_auc(trueY, predY, PREFIX):
+def plot_roc(trueY, predY, PREFIX):
 
     # Compute ROC curve and ROC area
     fpr, tpr, _ = roc_curve(trueY[:,-1], predY[:,-1])
@@ -60,7 +61,7 @@ def plot_roc_auc(trueY, predY, PREFIX):
 
     print('File',PREFIX+"_ROC.pdf","Saved")
 
-def plot_loss(history,PREFIX):
+def plot_loss(history, PREFIX):
 
     plt.title('Loss')
     plt.plot(history.history['loss'], label='Train')
@@ -76,12 +77,28 @@ def plot_loss(history,PREFIX):
     plt.savefig(PREFIX+"_acc.pdf")
     print("File",PREFIX+"_acc.pdf","Saved")
 
-    plt.title('R2')
-    plt.plot(history.history['r2'], label='Train')
-    plt.plot(history.history['val_r2'], label='Test')
-    plt.legend()
-    plt.savefig(PREFIX+"_r2.pdf")
-    print("File",PREFIX+"_r2.pdf","Saved")
-
 def calc_r2_score(Y_true, Y_pred):
     return r2_score(Y_true, Y_pred)
+
+def plot_pr(Y_true, Y_pred, PREFIX):
+
+    lines = []
+    labels = []
+
+    # calculate precision-recall curve
+    precision, recall, thresholds = precision_recall_curve(Y_true, Y_pred)
+
+    # calculate precision-recall metric
+    f1, auprc, avg_precision= f1_score(Y_true, Y_pred), auc(precision, recall), average_precision_score(Y_true, Y_pred)
+
+    l, = plt.step(precision, recall, color='navy', alpha=0.5, where='post', lw=3)
+    lines.append(l)
+    labels.append('F1={0:0.2f} AUC={0:0.2f} Avg={0:0.2f}'.format(f1,auprc,avg_precision))
+
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.ylim([0.0, 1.05])
+    plt.xlim([0.0, 1.0])
+    plt.title('{0} Precision-Recall curve'.format(PREFIX))
+    plt.legend(lines, labels, loc=(0.1, 0.1), prop=dict(size=14))
+    plt.savefig(PREFIX+"_PR.pdf", bbox_inches='tight')
