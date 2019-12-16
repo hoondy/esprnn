@@ -133,9 +133,10 @@ model_io.saveModel(PREFIX, model)
 
 ### EVALUATE ###
 
-loss, acc = model.evaluate([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
+loss, acc, r2 = model.evaluate([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
+print('Test R2:', r2)
 
 ### PREDICT ###
 

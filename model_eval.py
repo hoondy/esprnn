@@ -61,13 +61,27 @@ def plot_roc_auc(trueY, predY, PREFIX):
     print('File',PREFIX+"_ROC.pdf","Saved")
 
 def plot_loss(history,PREFIX):
-    plt.title('Loss (Mean Squared Error)')
+
+    plt.title('Loss')
     plt.plot(history.history['loss'], label='Train')
     plt.plot(history.history['val_loss'], label='Test')
     plt.legend()
     plt.savefig(PREFIX+"_loss.pdf")
-
     print("File",PREFIX+"_loss.pdf","Saved")
+
+    plt.title('Accuracy')
+    plt.plot(history.history['acc'], label='Train')
+    plt.plot(history.history['val_acc'], label='Test')
+    plt.legend()
+    plt.savefig(PREFIX+"_acc.pdf")
+    print("File",PREFIX+"_acc.pdf","Saved")
+
+    plt.title('R2')
+    plt.plot(history.history['r2'], label='Train')
+    plt.plot(history.history['val_r2'], label='Test')
+    plt.legend()
+    plt.savefig(PREFIX+"_r2.pdf")
+    print("File",PREFIX+"_r2.pdf","Saved")
 
 def calc_r2_score(Y_true, Y_pred):
     return r2_score(Y_true, Y_pred)
