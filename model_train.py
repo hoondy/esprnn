@@ -46,6 +46,7 @@ BATCH_SIZE = args.batchsize
 RANDOM_STATE = args.randomstate
 TEST_SIZE = args.testsize
 VERBOSE = args.verbose
+HIDDEN_STATE=1
 
 print("PREFIX:",PREFIX)
 print("MODEL:",MODEL)
@@ -89,24 +90,24 @@ exon_intron_input = layers.Input(shape=(2*SPAN, X_train.shape[2]), name="exon_in
 
 if MODEL=="LSTM":
     print('Building LSTM model...')
-    intron_exon_rnn = layers.LSTM(X_train.shape[2], return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.LSTM(X_train.shape[2], return_sequences=True)(exon_intron_input)
+    intron_exon_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
     merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
-    merged_rnn = layers.LSTM(X_train.shape[2], return_sequences=False)(merged)
+    merged_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=False)(merged)
 
 elif MODEL=="GRU":
     print('Building GRU model...')
-    intron_exon_rnn = layers.GRU(X_train.shape[2], return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.GRU(X_train.shape[2], return_sequences=True)(exon_intron_input)
+    intron_exon_rnn = layers.GRU(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.GRU(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
     merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
-    merged_rnn = layers.GRU(X_train.shape[2], return_sequences=False)(merged)
+    merged_rnn = layers.GRU(HIDDEN_STATE, return_sequences=False)(merged)
 
 elif MODEL=="RNN":
     print('Building SimpleRNN model...')
-    intron_exon_rnn = layers.SimpleRNN(X_train.shape[2], return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.SimpleRNN(X_train.shape[2], return_sequences=True)(exon_intron_input)
+    intron_exon_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
     merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
-    merged_rnn = layers.SimpleRNN(X_train.shape[2], return_sequences=False)(merged)
+    merged_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=False)(merged)
 
 else:
     print('-m or --model parameter not recognized...')
