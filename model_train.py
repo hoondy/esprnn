@@ -32,7 +32,7 @@ parser.add_argument('-b','--batchsize', help='batch size',required=False, type=i
 parser.add_argument('-r','--randomstate', help='random state',required=False, type=int, default=38)
 parser.add_argument('-t','--testsize', help='test size fraction',required=False, type=float, default=0.2)
 parser.add_argument('-v','--verbose', help='verbosity',required=False, type=int, default=1) # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
-parser.add_argument('-h','--hiddensize', help='hidden state size',required=False, type=int, default=2)
+parser.add_argument('--hiddensize', help='hidden state size',required=False, type=int, default=2)
 
 args = parser.parse_args()
 
