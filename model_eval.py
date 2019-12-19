@@ -73,23 +73,33 @@ def calc_r2_score(Y_true, Y_pred):
     return r2_score(Y_true, Y_pred)
 
 def plot_pr(Y_true, Y_pred, PREFIX):
-    lines = []
-    labels = []
 
     # calculate precision-recall curve
-    precision, recall, thresholds = precision_recall_curve(Y_true, Y_pred)
+    precision, recall, _ = precision_recall_curve(Y_true, Y_pred)
+    pr_auc = auc(recall, precision)
+    pr_ap = average_precision_score(Y_true, Y_pred)
 
-    # calculate precision-recall metric
-    f1, auprc, avg_precision= f1_score(Y_true, Y_pred), auc(precision, recall), average_precision_score(Y_true, Y_pred)
+    # summarize scores
+    print('Precision-Recall curve: auc=%.3f ap=%.3f' % (pr_auc,pr_ap))
 
-    l, = plt.step(precision, recall, color='navy', alpha=0.5, where='post', lw=3)
-    lines.append(l)
-    labels.append('F1={0:0.2f} AUC={0:0.2f} Avg={0:0.2f}'.format(f1,auprc,avg_precision))
+    # plot the precision-recall curves
+    plt.plot(recall, precision, marker='.', color='navy', alpha=0.5, lw=3)
+    pr_rand = len(Y_true[Y_true==1]) / len(Y_true)
+    plt.plot([0, 1], [pr_rand, pr_rand], linestyle='--', color='teal', alpha=0.5)
 
+    # axis labels
     plt.xlabel('Recall')
     plt.ylabel('Precision')
+
+    # axis limit
     plt.ylim([0.0, 1.05])
     plt.xlim([0.0, 1.0])
+
+    # title
     plt.title('{0} Precision-Recall curve'.format(PREFIX))
-    plt.legend(lines, labels, loc=(0.1, 0.1), prop=dict(size=14))
+
+    # show the legend
+    plt.legend(['auc={0:0.2f} ap={0:0.2f}'.format(pr_auc,pr_ap),'random'])
+
+    # save the plot
     plt.savefig(PREFIX+"_PR.pdf", bbox_inches='tight')

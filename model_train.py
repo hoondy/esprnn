@@ -141,7 +141,11 @@ print('Test Accuracy:', acc)
 ### PREDICT ###
 
 Y_pred = model.predict([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
+
+### SAVE DATA ###
+
 model_io.save2npy(PREFIX+"_Y_pred.npy",Y_pred)
+model_io.save2npy(PREFIX+"_Y_test.npy",Y_test)
 
 ### PLOT ROC curve ###
 
