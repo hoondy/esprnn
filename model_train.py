@@ -31,7 +31,8 @@ parser.add_argument('-d','--dropout', help='dropout',required=False, type=float,
 parser.add_argument('-b','--batchsize', help='batch size',required=False, type=int, default=100)
 parser.add_argument('-r','--randomstate', help='random state',required=False, type=int, default=38)
 parser.add_argument('-t','--testsize', help='test size fraction',required=False, type=float, default=0.2)
-parser.add_argument('-v','--verbose', help='test size fraction',required=False, type=int, default=1) # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
+parser.add_argument('-v','--verbose', help='verbosity',required=False, type=int, default=1) # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
+parser.add_argument('-h','--hiddensize', help='hidden state size',required=False, type=int, default=2)
 
 args = parser.parse_args()
 
@@ -40,19 +41,22 @@ args = parser.parse_args()
 PREFIX = args.prefix
 MODEL = args.model
 SPAN = args.span
-EPOCHS = args.epoch
 DROPOUT = args.dropout
+HIDDEN_STATE=args.hiddensize
+
+EPOCHS = args.epoch
 BATCH_SIZE = args.batchsize
 RANDOM_STATE = args.randomstate
 TEST_SIZE = args.testsize
 VERBOSE = args.verbose
-HIDDEN_STATE=1
 
 print("PREFIX:",PREFIX)
 print("MODEL:",MODEL)
 print("SPAN:",str(SPAN))
-print("EPOCHS:",str(EPOCHS))
 print("DROPOUT:",str(DROPOUT))
+print("HIDDEN_STATE:",str(HIDDEN_STATE))
+
+print("EPOCHS:",str(EPOCHS))
 print("BATCH_SIZE:",str(BATCH_SIZE))
 print("RANDOM_STATE:",str(RANDOM_STATE))
 print("TEST_SIZE:",str(TEST_SIZE))

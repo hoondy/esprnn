@@ -50,8 +50,8 @@ def plot_roc(trueY, predY, PREFIX):
     plt.title('ROC curve of '+PREFIX)
     plt.legend(loc="lower right")
     plt.savefig(PREFIX+'_ROC.pdf',format='pdf')
-
     print('File',PREFIX+"_ROC.pdf","Saved")
+    plt.clf()
 
 def plot_loss(history, PREFIX):
 
@@ -61,6 +61,7 @@ def plot_loss(history, PREFIX):
     plt.legend()
     plt.savefig(PREFIX+"_loss.pdf")
     print("File",PREFIX+"_loss.pdf","Saved")
+    plt.clf()
 
     plt.title('Accuracy')
     plt.plot(history.history['acc'], label='Train')
@@ -68,6 +69,7 @@ def plot_loss(history, PREFIX):
     plt.legend()
     plt.savefig(PREFIX+"_acc.pdf")
     print("File",PREFIX+"_acc.pdf","Saved")
+    plt.clf()
 
 def calc_r2_score(Y_true, Y_pred):
     return r2_score(Y_true, Y_pred)
@@ -103,3 +105,4 @@ def plot_pr(Y_true, Y_pred, PREFIX):
 
     # save the plot
     plt.savefig(PREFIX+"_PR.pdf", bbox_inches='tight')
+    plt.clf()
