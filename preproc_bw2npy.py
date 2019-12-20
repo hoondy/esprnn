@@ -22,7 +22,7 @@ parser.add_argument('-p','--prefix',help='output prefix', required=True)
 args = parser.parse_args()
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-1*(x-1))) #k=1, x0=1
+    return 1 / (1 + math.exp(-1*(x-10))) #k=1, x0=10
 
 def bw2npy(bw_file, bed_file, npy_file):
 
@@ -35,13 +35,13 @@ def bw2npy(bw_file, bed_file, npy_file):
     for i in range(bed.shape[0]):
         # if positive strand, store sigmoid normalized signal value
         if bed.loc[i,5]=='+':
-            tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
+            tmp=np.array([(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))])
             tmp=np.nan_to_num(tmp)
             X[i,:,0]=tmp
 
         # if negative strand, reverse signal value
         else:
-            tmp=np.array([sigmoid(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
+            tmp=np.array([(x) for x in (bw.values(bed.loc[i,0], int(bed.loc[i,1]), int(bed.loc[i,2])))][::-1])
             tmp=np.nan_to_num(tmp)
             X[i,:,0]=tmp
 

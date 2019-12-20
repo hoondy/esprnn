@@ -94,7 +94,6 @@ def plot_pr(Y_true, Y_pred, PREFIX):
     plt.ylabel('Precision')
 
     # axis limit
-    plt.ylim([0.0, 1.05])
     plt.xlim([0.0, 1.0])
 
     # title
