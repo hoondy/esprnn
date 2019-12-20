@@ -20,7 +20,7 @@ parser.add_argument('-b','--x2',help='input files for 5don (comma separated)', r
 parser.add_argument('-y','--y',help='input response variable', required=True)
 
 parser.add_argument('-p','--prefix',help='output prefix', required=True)
-parser.add_argument('-s','--span',help='span size', required=False, default=200, type=int)
+parser.add_argument('-s','--span', help='span window size (input sequence length for each splice site)',required=False, type=int, default=400)
 
 args = parser.parse_args()
 
@@ -33,7 +33,7 @@ with h5py.File(args.prefix+".hdf5", mode='w') as f:
         tmp=np.concatenate((np.load(args.path+"/"+file[0]),np.load(args.path+"/"+file[1])),axis=1)
 
         if idx==0:
-            f.create_dataset("x", data=tmp, chunks=True, maxshape=(None,4*args.span,None))
+            f.create_dataset("x", data=tmp, chunks=True, maxshape=(None,2*args.span,None))
         else:
             f["x"].resize((f["x"].shape[2] + tmp.shape[2]), axis = 2)
             f["x"][:,:,-tmp.shape[2]:] = tmp

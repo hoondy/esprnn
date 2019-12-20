@@ -25,7 +25,7 @@ parser.add_argument('-p','--prefix', help='prefix for output files',required=Tru
 parser.add_argument('-x','--input', help='input HDF5 data',required=True)
 
 parser.add_argument('-m','--model', help='RNN model: LSTM,GRU,RNN',required=False, default="LSTM")
-parser.add_argument('-s','--span', help='span size from splice site',required=False, type=int, default=200)
+parser.add_argument('-s','--span', help='span window size (input sequence length for each splice site)',required=False, type=int, default=400)
 parser.add_argument('-e','--epoch', help='epoch',required=False, type=int, default=20)
 parser.add_argument('-d','--dropout', help='dropout',required=False, type=float, default=0.3)
 parser.add_argument('-b','--batchsize', help='batch size',required=False, type=int, default=100)
@@ -89,8 +89,8 @@ print("Test set size:",len(X_test))
 
 ### BUILD MODEL ###
 
-intron_exon_input = layers.Input(shape=(2*SPAN, X_train.shape[2]), name="intron_exon_3acc")
-exon_intron_input = layers.Input(shape=(2*SPAN, X_train.shape[2]), name="exon_intron_5don")
+intron_exon_input = layers.Input(shape=(SPAN, X_train.shape[2]), name="intron_exon_3acc")
+exon_intron_input = layers.Input(shape=(SPAN, X_train.shape[2]), name="exon_intron_5don")
 
 if MODEL=="LSTM":
     print('Building LSTM model...')
@@ -126,7 +126,7 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-history = model.fit([X_train[:,:2*SPAN,:], X_train[:,2*SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
+history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
 
 ### PLOT LOSS ###
 
@@ -138,13 +138,13 @@ model_io.saveModel(PREFIX, model)
 
 ### EVALUATE ###
 
-loss, acc = model.evaluate([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
+loss, acc = model.evaluate([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
 
 ### PREDICT ###
 
-Y_pred = model.predict([X_test[:,:2*SPAN,:], X_test[:,2*SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
+Y_pred = model.predict([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
 
 ### SAVE DATA ###
 
