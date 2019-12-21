@@ -126,7 +126,8 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=1)
+# history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=VERBOSE)
+history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation=([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], Y_test), batch_size=BATCH_SIZE, verbose=VERBOSE)
 
 ### PLOT LOSS ###
 
