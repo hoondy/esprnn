@@ -23,15 +23,15 @@ def calc_accuracy_score(Y_true, Y_pred):
     Y_true = Y_true[:,-1]
     Y_pred = Y_pred[:,-1]
     threshold=len(Y_true[Y_true==1]) / len(Y_true)
-    Y_pred = np.array(Y_pred[:,-1]>threshold).astype(int)
-    return accuracy_score(Y_true, Y_pred)
+    Y_pred_binary = np.array(Y_pred>threshold).astype(int)
+    return accuracy_score(Y_true, Y_pred_binary)
 
 def calc_f1_score(Y_true, Y_pred):
     Y_true = Y_true[:,-1]
     Y_pred = Y_pred[:,-1]
     threshold=len(Y_true[Y_true==1]) / len(Y_true)
-    predY = np.array(Y_pred[:,-1]>threshold).astype(int)
-    return f1_score(Y_true, predY)
+    Y_pred_binary = np.array(Y_pred>threshold).astype(int)
+    return f1_score(Y_true, Y_pred_binary)
 
 def calc_roc_auc_score(Y_true, Y_pred):
     Y_true = Y_true[:,-1]
