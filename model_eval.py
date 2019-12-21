@@ -19,13 +19,17 @@ from sklearn.metrics import average_precision_score, precision_recall_curve
 def predModel(model, inputX, BATCH_SIZE=100, VERBOSE=1):
     return model.predict(inputX, batch_size=BATCH_SIZE, verbose=VERBOSE)
 
-def calc_accuracy_score(Y_true, Y_pred, threshold=0.5):
+def calc_accuracy_score(Y_true, Y_pred):
     Y_true = Y_true[:,-1]
+    Y_pred = Y_pred[:,-1]
+    threshold=len(Y_true[Y_true==1]) / len(Y_true)
     Y_pred = np.array(Y_pred[:,-1]>threshold).astype(int)
     return accuracy_score(Y_true, Y_pred)
 
-def calc_f1_score(Y_true, Y_pred, threshold=0.5):
+def calc_f1_score(Y_true, Y_pred):
     Y_true = Y_true[:,-1]
+    Y_pred = Y_pred[:,-1]
+    threshold=len(Y_true[Y_true==1]) / len(Y_true)
     predY = np.array(Y_pred[:,-1]>threshold).astype(int)
     return f1_score(Y_true, predY)
 
@@ -34,9 +38,12 @@ def calc_roc_auc_score(Y_true, Y_pred):
     Y_pred = Y_pred[:,-1]
     return roc_auc_score(Y_true, Y_pred)
 
-def plot_roc(trueY, predY, PREFIX):
+def plot_roc(Y_true, Y_pred, PREFIX):
+    Y_true = Y_true[:,-1]
+    Y_pred = Y_pred[:,-1]
+
     # Compute ROC curve and ROC area
-    fpr, tpr, _ = roc_curve(trueY[:,-1], predY[:,-1])
+    fpr, tpr, _ = roc_curve(Y_true, Y_pred)
     roc_auc = auc(fpr, tpr)
 
     # Plot of a ROC curve for a specific class
@@ -72,9 +79,13 @@ def plot_loss(history, PREFIX):
     plt.clf()
 
 def calc_r2_score(Y_true, Y_pred):
+    Y_true = Y_true[:,-1]
+    Y_pred = Y_pred[:,-1]
     return r2_score(Y_true, Y_pred)
 
 def plot_pr(Y_true, Y_pred, PREFIX):
+    Y_true = Y_true[:,-1]
+    Y_pred = Y_pred[:,-1]
 
     # calculate precision-recall curve
     precision, recall, _ = precision_recall_curve(Y_true, Y_pred)
