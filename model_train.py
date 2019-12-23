@@ -136,7 +136,7 @@ model.summary()
 
 print('Train...')
 # history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=VERBOSE)
-history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE, shuffle='batch')
+history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE, shuffle=False)
 
 ### PLOT LOSS ###
 
