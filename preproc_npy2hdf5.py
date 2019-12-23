@@ -33,7 +33,7 @@ with h5py.File(args.prefix+".hdf5", mode='w') as f:
         tmp=np.concatenate((np.load(args.path+"/"+file[0]),np.load(args.path+"/"+file[1])),axis=1)
 
         if idx==0:
-            f.create_dataset("x", data=tmp, chunks=True, maxshape=(None,2*args.span,None))
+            f.create_dataset("x", data=tmp, chunks=True, maxshape=(None,2*args.span,None), dtype='f')
         else:
             f["x"].resize((f["x"].shape[2] + tmp.shape[2]), axis = 2)
             f["x"][:,:,-tmp.shape[2]:] = tmp

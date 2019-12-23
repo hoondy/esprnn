@@ -9,19 +9,28 @@ __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
 from keras.models import model_from_json, model_from_yaml
+from keras.models import load_model
 import numpy as np
 
-def loadModel(MODEL_NAME):
-
+### Saving/loading whole models (architecture + weights + optimizer state)
+def load(MODEL_NAME):
     print('Loading Model..')
+    model = load_model(MODEL_NAME+'.h5')
+    model.summary()
+    print('Done')
+    return model
 
+def save(MODEL_NAME, model):
+    model.save(MODEL_NAME+'.h5')
+
+### Saving/loading only a model's architecture
+def loadModel(MODEL_NAME):
+    print('Loading Model..')
     model = model_from_yaml(open(MODEL_NAME+'.yaml').read())
     model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
     model.load_weights(MODEL_NAME+'.h5')
     model.summary()
-
     print('Done')
-
     return model
 
 def saveModel(MODEL_NAME, model):
