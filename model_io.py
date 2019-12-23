@@ -16,7 +16,7 @@ def loadModel(MODEL_NAME):
     print('Loading Model..')
 
     model = model_from_yaml(open(MODEL_NAME+'.yaml').read())
-    model.compile(loss='mean_squared_error',optimizer='adam',metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
     model.load_weights(MODEL_NAME+'.h5')
     model.summary()
 
