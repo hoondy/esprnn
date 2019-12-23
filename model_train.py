@@ -34,33 +34,42 @@ parser.add_argument('-t','--testsize', help='test size fraction',required=False,
 parser.add_argument('-v','--verbose', help='verbosity',required=False, type=int, default=1) # verbose: 0 for no logging to stdout, 1 for progress bar logging, 2 for one log line per epoch.
 parser.add_argument('--hiddensize', help='hidden state size',required=False, type=int, default=2)
 
+parser.add_argument('--activation', help='activation',required=False, default="sigmoid")
+parser.add_argument('--optimizer', help='optimizer',required=False, default="adam")
 args = parser.parse_args()
 
 ### PARAMETERS ###
 
-PREFIX = args.prefix
-MODEL = args.model
-SPAN = args.span
-DROPOUT = args.dropout
-HIDDEN_STATE=args.hiddensize
+param_PREFIX = args.prefix
+param_MODEL = args.model
+param_SPAN = args.span
+param_DROPOUT = args.dropout
+param_HIDDEN_STATE=args.hiddensize
 
-EPOCHS = args.epoch
-BATCH_SIZE = args.batchsize
-RANDOM_STATE = args.randomstate
-TEST_SIZE = args.testsize
-VERBOSE = args.verbose
+param_EPOCHS = args.epoch
+param_BATCH_SIZE = args.batchsize
+param_RANDOM_STATE = args.randomstate
+param_TEST_SIZE = args.testsize
+param_VERBOSE = args.verbose
 
-print("PREFIX:",PREFIX)
-print("MODEL:",MODEL)
-print("SPAN:",str(SPAN))
-print("DROPOUT:",str(DROPOUT))
-print("HIDDEN_STATE:",str(HIDDEN_STATE))
+param_ACTIVATION = args.activation
+param_OPTIMIZER = args.optimizer
 
-print("EPOCHS:",str(EPOCHS))
-print("BATCH_SIZE:",str(BATCH_SIZE))
-print("RANDOM_STATE:",str(RANDOM_STATE))
-print("TEST_SIZE:",str(TEST_SIZE))
-print("VERBOSE:",str(VERBOSE))
+print("PREFIX:",param_PREFIX)
+print("MODEL:",param_MODEL)
+print("SPAN:",str(param_SPAN))
+print("DROPOUT:",str(param_DROPOUT))
+print("HIDDEN_STATE:",str(param_HIDDEN_STATE))
+
+print("EPOCHS:",str(param_EPOCHS))
+print("BATCH_SIZE:",str(param_BATCH_SIZE))
+print("RANDOM_STATE:",str(param_RANDOM_STATE))
+print("TEST_SIZE:",str(param_TEST_SIZE))
+print("VERBOSE:",str(param_VERBOSE))
+
+print("ACTIVATION:",str(param_ACTIVATION))
+print("OPTIMIZER:",str(param_OPTIMIZER))
+
 
 ### R2 metric for regression ###
 
@@ -82,82 +91,82 @@ By default, data is first split 8:2 train and test. 80% of training data is then
 '''
 print("Splitting data into train and test set")
 with h5py.File(args.input, 'r') as f:
-    X_train, X_test, Y_train, Y_test = train_test_split(np.array(f['x']), np.array(f['y']), test_size=TEST_SIZE, random_state=RANDOM_STATE)
+    X_train, X_test, Y_train, Y_test = train_test_split(np.array(f['x']), np.array(f['y']), test_size=param_TEST_SIZE, random_state=param_RANDOM_STATE)
 
 print("Train set size:",len(X_train))
 print("Test set size:",len(X_test))
 
 ### BUILD MODEL ###
 
-intron_exon_input = layers.Input(shape=(SPAN, X_train.shape[2]), name="intron_exon_3acc")
-exon_intron_input = layers.Input(shape=(SPAN, X_train.shape[2]), name="exon_intron_5don")
+intron_exon_input = layers.Input(shape=(param_SPAN, X_train.shape[2]), name="intron_exon_3acc")
+exon_intron_input = layers.Input(shape=(param_SPAN, X_train.shape[2]), name="exon_intron_5don")
 
-if MODEL=="LSTM":
+if param_MODEL=="LSTM":
     print('Building LSTM model...')
-    intron_exon_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
-    merged_rnn = layers.LSTM(HIDDEN_STATE, return_sequences=False)(merged)
+    intron_exon_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=False)(merged)
 
-elif MODEL=="GRU":
+elif param_MODEL=="GRU":
     print('Building GRU model...')
-    intron_exon_rnn = layers.GRU(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.GRU(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
+    intron_exon_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
     merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
-    merged_rnn = layers.GRU(HIDDEN_STATE, return_sequences=False)(merged)
+    merged_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=False)(merged)
 
-elif MODEL=="RNN":
+elif param_MODEL=="RNN":
     print('Building SimpleRNN model...')
-    intron_exon_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=True)(intron_exon_input)
-    exon_intron_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=True)(exon_intron_input)
+    intron_exon_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
+    exon_intron_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
     merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
-    merged_rnn = layers.SimpleRNN(HIDDEN_STATE, return_sequences=False)(merged)
+    merged_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 else:
     print('-m or --model parameter not recognized...')
     sys.exit(1)
 
-merged_dropout = layers.Dropout(DROPOUT)(merged_rnn)
-merged_output = layers.Dense(1, activation='sigmoid')(merged_dropout)
+merged_dropout = layers.Dropout(param_DROPOUT)(merged_rnn)
+merged_output = layers.Dense(1, activation=param_ACTIVATION)(merged_dropout)
 model = models.Model(inputs=[intron_exon_input, exon_intron_input], outputs=merged_output)
-model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['acc'])
+model.compile(optimizer=param_OPTIMIZER,loss='binary_crossentropy',metrics=['acc'])
 model.summary()
 
 ### TRAIN ###
 
 print('Train...')
 # history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=VERBOSE)
-history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_data=([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], Y_test), batch_size=BATCH_SIZE, verbose=VERBOSE)
+history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 
 ### PLOT LOSS ###
 
-model_eval.plot_loss(history, PREFIX)
+model_eval.plot_loss(history, param_PREFIX)
 
 ### SAVE DATA ###
 
-model_io.saveModel(PREFIX, model)
+model_io.saveModel(param_PREFIX, model)
 
 ### EVALUATE ###
 
-loss, acc = model.evaluate([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], Y_test, batch_size=BATCH_SIZE, verbose=VERBOSE)
+loss, acc = model.evaluate([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test, batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
 
 ### PREDICT ###
 
-Y_pred = model.predict([X_test[:,:SPAN,:], X_test[:,SPAN:,:]], batch_size=BATCH_SIZE, verbose=VERBOSE)
+Y_pred = model.predict([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 
 ### SAVE DATA ###
 
-model_io.save2npy(PREFIX+"_Y_pred.npy",Y_pred)
-model_io.save2npy(PREFIX+"_Y_test.npy",Y_test)
+model_io.save2npy(param_PREFIX+"_Y_test.npy",Y_test)
+model_io.save2npy(param_PREFIX+"_Y_pred.npy",Y_pred)
 
 ### PLOT ROC curve ###
 
-model_eval.plot_roc(Y_test, Y_pred, PREFIX)
+model_eval.plot_roc(Y_test, Y_pred, param_PREFIX)
 print('Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, Y_pred))
 
 ### PLOT PR curve ###
 
-model_eval.plot_pr(Y_test, Y_pred, PREFIX)
+model_eval.plot_pr(Y_test, Y_pred, param_PREFIX)
 print('Test F1 Score:', model_eval.calc_f1_score(Y_test, Y_pred))
