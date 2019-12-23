@@ -105,21 +105,21 @@ if param_MODEL=="LSTM":
     print('Building LSTM model...')
     intron_exon_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
     merged_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 elif param_MODEL=="GRU":
     print('Building GRU model...')
     intron_exon_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
     merged_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 elif param_MODEL=="RNN":
     print('Building SimpleRNN model...')
     intron_exon_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
     merged_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 else:
