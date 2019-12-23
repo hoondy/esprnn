@@ -105,21 +105,21 @@ if param_MODEL=="LSTM":
     print('Building LSTM model...')
     intron_exon_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
     merged_rnn = layers.LSTM(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 elif param_MODEL=="GRU":
     print('Building GRU model...')
     intron_exon_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
     merged_rnn = layers.GRU(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 elif param_MODEL=="RNN":
     print('Building SimpleRNN model...')
     intron_exon_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(intron_exon_input)
     exon_intron_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=True)(exon_intron_input)
-    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=1)
+    merged = layers.concatenate([intron_exon_rnn, exon_intron_rnn],axis=2)
     merged_rnn = layers.SimpleRNN(param_HIDDEN_STATE, return_sequences=False)(merged)
 
 else:
@@ -136,7 +136,7 @@ model.summary()
 
 print('Train...')
 # history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=VERBOSE)
-history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE, shuffle=False)
+history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 
 ### PREDICT ###
 
