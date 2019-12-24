@@ -12,7 +12,7 @@ import argparse, sys
 from tensorflow.keras import layers
 from tensorflow.keras import models
 from tensorflow.keras import backend as K
-from . import model_eval, model_io
+import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
 import h5py
