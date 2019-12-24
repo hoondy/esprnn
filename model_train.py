@@ -9,10 +9,10 @@ __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
 import argparse, sys
-from keras import layers
-from keras import models
-from keras import backend as K
-import model_eval, model_io
+from tensorflow.keras import layers
+from tensorflow.keras import models
+from tensorflow.keras import backend as K
+from . import model_eval, model_io
 import numpy as np
 from sklearn.model_selection import train_test_split
 import h5py

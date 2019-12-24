@@ -8,8 +8,8 @@ __version__ = "1.0.0"
 __maintainer__ = "Donghoon Lee"
 __email__ = "donghoon.lee@yale.edu"
 
-from keras.models import model_from_json, model_from_yaml
-from keras.models import load_model
+from tensorflow.keras.models import model_from_json, model_from_yaml
+from tensorflow.keras.models import load_model
 import numpy as np
 
 ### Saving/loading whole models (architecture + weights + optimizer state)
@@ -21,7 +21,7 @@ def load(MODEL_NAME):
     return model
 
 def save(MODEL_NAME, model):
-    model.save(MODEL_NAME+'.h5')
+    model.save(MODEL_NAME+'.h5', save_format='h5')
 
 ### Saving/loading only a model's architecture
 def loadModel(MODEL_NAME):
