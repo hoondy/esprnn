@@ -115,4 +115,5 @@ def plot_pr(Y_true, Y_pred, PREFIX):
 
     # save the plot
     plt.savefig(PREFIX+"_PR.pdf", bbox_inches='tight')
+    print("File",PREFIX+"_PR.pdf","Saved")
     plt.clf()

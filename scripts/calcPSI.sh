@@ -35,8 +35,9 @@ sed 's/,/\t/g' "$PREFIX"filtered_junctions.bed | grep -v description | awk '{OFS
 
 ## EXON INC
 echo "calc exon inclusion"
-samtools view -@ $THREAD -L "$PREFIX"exon-annotation.bed -hb "$PATH_IN""$PREFIX"Aligned.out.sam | bedtools bamtobed -i - | sort -k1,1V -k2,2n --parallel=$THREAD > "$PREFIX"filtered_reads.bed
-bedtools coverage -a "$PREFIX"exon-annotation.bed -b "$PREFIX"filtered_reads.bed -split -sorted | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$3-$2,$4,$7}' | sort -k 5 --parallel=$THREAD > "$PREFIX"exonic_parts.inclusion
+samtools view -@ $THREAD -L "$PREFIX"exon-annotation.bed -hb "$PATH_IN""$PREFIX"Aligned.out.sam > "$PREFIX"filtered_reads.bam
+bedtools bamtobed -i "$PREFIX"filtered_reads.bam -split | sort -k1,1V -k2,2n --parallel=$THREAD > "$PREFIX"filtered_reads.bed
+bedtools coverage -a "$PREFIX"exon-annotation.bed -b "$PREFIX"filtered_reads.bed -sorted | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$3-$2,$4,$7}' | sort -k 5 --parallel=$THREAD > "$PREFIX"exonic_parts.inclusion
 
 ## EXON EXC
 echo "calc exon exclusion"
@@ -49,6 +50,6 @@ echo $readLength
 paste "$PREFIX"exonic_parts.inclusion "$PREFIX"exonic_parts.exclusion | awk -v len="$readLength" 'BEGIN{OFS="\t"; print "exon_ID","length","inclusion","exclusion","PSI"}{NIR=$6/($4+len-1); NER=$8/(len-1)}{print $5,$4,$6,$8,(NIR+NER<=0)? "NA":NIR/(NIR+NER)}' > "$PREFIX"exonic_parts.psi
 
 ## clean
-rm "$PREFIX"junctions.bed "$PREFIX"left.bed "$PREFIX"right.bed "$PREFIX"left.overlap "$PREFIX"right.overlap "$PREFIX"filtered_junctions.txt "$PREFIX"filtered_junctions.bed "$PREFIX"intron.bed "$PREFIX"exonic_parts.inclusion "$PREFIX"exonic_parts.exclusion "$PREFIX"filtered_reads.bed "$PREFIX"exon-annotation.bed
+rm "$PREFIX"junctions.bed "$PREFIX"left.bed "$PREFIX"right.bed "$PREFIX"left.overlap "$PREFIX"right.overlap "$PREFIX"filtered_junctions.txt "$PREFIX"filtered_junctions.bed "$PREFIX"intron.bed "$PREFIX"exonic_parts.inclusion "$PREFIX"exonic_parts.exclusion "$PREFIX"filtered_reads.bed "$PREFIX"filtered_reads.bam "$PREFIX"exon-annotation.bed
 
 echo "DONE!"
