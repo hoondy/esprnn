@@ -17,7 +17,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import h5py
 
-### Usage: python model_train.py --prefix K562_LSTM_200span --input K562_input.hdf5 --model LSTM --span 200
+### Usage example: python model_train.py --prefix K562_LSTM_200span --input K562_input.hdf5 --model LSTM --span 400
 
 parser = argparse.ArgumentParser(description='Train RNN Model')
 
@@ -81,7 +81,7 @@ def r2(y_true, y_pred):
 ### TRAIN TEST SPLIT ###
 
 '''
-Terminology defined
+Terminology defined (for testsize=0.2)
 
 Training data (64% of original data): data used to train the model
 Validation data (16% of original data): data used for evaluating model fit during training
@@ -89,10 +89,10 @@ Test data (20% of original data): data used for evaluating the final model fit
 
 By default, data is first split 8:2 train and test. 80% of training data is then split again between 8:2 (64% and 16% of original) train:validation during training phase
 '''
+
 print("Splitting data into train and test set")
 with h5py.File(args.input, 'r') as f:
     X_train, X_test, Y_train, Y_test = train_test_split(np.array(f['x']), np.array(f['y']), test_size=param_TEST_SIZE, random_state=param_RANDOM_STATE)
-
 print("Train set size:",len(X_train))
 print("Test set size:",len(X_test))
 
@@ -135,18 +135,11 @@ model.summary()
 ### TRAIN ###
 
 print('Train...')
-# history = model.fit([X_train[:,:SPAN,:], X_train[:,SPAN:,:]], Y_train, epochs=EPOCHS, validation_split=TEST_SIZE, batch_size=BATCH_SIZE, verbose=VERBOSE)
-model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_data=([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y_test), batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
+history = model.fit([X_train[:,:param_SPAN,:], X_train[:,param_SPAN:,:]], Y_train, epochs=param_EPOCHS, validation_split=param_TEST_SIZE, batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 
-### PREDICT ###
+### PLOT LOSS ###
 
-Y_pred = model.predict([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
-
-### SAVE DATA ###
-
-model_io.save2npy(param_PREFIX+"_X_test.npy",X_test)
-model_io.save2npy(param_PREFIX+"_Y_test.npy",Y_test)
-model_io.save2npy(param_PREFIX+"_Y_pred.npy",Y_pred)
+model_eval.plot_loss(history, param_PREFIX)
 
 ### EVALUATE ###
 
@@ -154,20 +147,24 @@ loss, acc = model.evaluate([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], Y
 print('Test Loss:', loss)
 print('Test Accuracy:', acc)
 
-### PLOT LOSS ###
+### PREDICT ###
 
-# model_eval.plot_loss(history, param_PREFIX)
+Y_pred = model.predict([X_test[:,:param_SPAN,:], X_test[:,param_SPAN:,:]], batch_size=param_BATCH_SIZE, verbose=param_VERBOSE)
 
 ### PLOT ROC curve ###
 
 model_eval.plot_roc(Y_test, Y_pred, param_PREFIX)
-print('Test ROC AUC:', model_eval.calc_roc_auc_score(Y_test, Y_pred))
 
 ### PLOT PR curve ###
 
 model_eval.plot_pr(Y_test, Y_pred, param_PREFIX)
-print('Test F1 Score:', model_eval.calc_f1_score(Y_test, Y_pred))
 
 ### SAVE MODEL+WEIGHT ###
 
 model_io.save(param_PREFIX, model)
+
+### SAVE DATA ###
+
+# model_io.save2npy(param_PREFIX+"_X_test.npy",X_test)
+model_io.save2npy(param_PREFIX+"_Y_test.npy",Y_test)
+model_io.save2npy(param_PREFIX+"_Y_pred.npy",Y_pred)

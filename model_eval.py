@@ -46,16 +46,29 @@ def plot_roc(Y_true, Y_pred, PREFIX):
     fpr, tpr, _ = roc_curve(Y_true, Y_pred)
     roc_auc = auc(fpr, tpr)
 
-    # Plot of a ROC curve for a specific class
+    # summarize scores
+    print('ROC curve: AUC=%.3f' % (roc_auc))
+
+    # Plot ROC curve
     plt.figure()
-    plt.plot(fpr, tpr, label='ROC curve (AUC = %0.2f)' % roc_auc)
-    plt.plot([0, 1], [0, 1], 'k--')
+    plt.plot(fpr, tpr, label='ROC curve (AUC = %0.2f)' % roc_auc, color='navy', alpha=0.5, lw=3)
+    plt.plot([0, 1], [0, 1], 'k--', alpha=0.5)
+
+    # axis limit
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
+
+    # axis labels
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
+
+    # title
     plt.title('ROC curve of '+PREFIX)
+
+    # show the legend
     plt.legend(loc="lower right")
+
+    # save the plot
     plt.savefig(PREFIX+'_ROC.pdf',format='pdf')
     print('File',PREFIX+"_ROC.pdf","Saved")
     plt.clf()
@@ -91,14 +104,17 @@ def plot_pr(Y_true, Y_pred, PREFIX):
     precision, recall, _ = precision_recall_curve(Y_true, Y_pred)
     pr_auc = auc(recall, precision)
     pr_ap = average_precision_score(Y_true, Y_pred)
+    threshold=len(Y_true[Y_true==1]) / len(Y_true)
+    Y_pred_binary = np.array(Y_pred>threshold).astype(int)
+    pr_f1 = f1_score(Y_true, Y_pred_binary)
 
     # summarize scores
-    print('Precision-Recall curve: auc=%.3f ap=%.3f' % (pr_auc,pr_ap))
+    print('Precision-Recall curve: AUC=%.3f AP=%.3f F1=%.3f' % (pr_auc,pr_ap,pr_f1))
 
     # plot the precision-recall curves
-    plt.plot(recall, precision, marker='.', color='navy', alpha=0.5, lw=3)
+    plt.step(recall, precision, color='navy', alpha=0.5, where='post', lw=3)
     pr_rand = len(Y_true[Y_true==1]) / len(Y_true)
-    plt.plot([0, 1], [pr_rand, pr_rand], linestyle='--', color='teal', alpha=0.5)
+    plt.plot([0, 1], [pr_rand, pr_rand], linestyle='--', color='k', alpha=0.5)
 
     # axis labels
     plt.xlabel('Recall')
@@ -108,10 +124,10 @@ def plot_pr(Y_true, Y_pred, PREFIX):
     plt.xlim([0.0, 1.0])
 
     # title
-    plt.title('{0} Precision-Recall curve'.format(PREFIX))
+    plt.title('PR curve of {0}'.format(PREFIX))
 
     # show the legend
-    plt.legend(['auc={0:0.2f} ap={0:0.2f}'.format(pr_auc,pr_ap),'random'])
+    plt.legend(['PR curve (AUC=%.2f F1=%.2f)' % (pr_auc,pr_f1),'random'],loc="lower right")
 
     # save the plot
     plt.savefig(PREFIX+"_PR.pdf", bbox_inches='tight')
