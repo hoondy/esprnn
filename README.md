@@ -89,7 +89,6 @@ bedtools getfasta -fi genome.fa -bed gencode.v24.annotation.esprnn-exon.3acc400s
 bedtools getfasta -fi genome.fa -bed gencode.v24.annotation.esprnn-exon.5don400span.bed -s -name -fo hg38_DNA_5don_400span.fa
 python preproc_fa2npy.py -i hg38_DNA_3acc_400span.fa -o XXX_DNA_3acc_500span.npy
 python preproc_fa2npy.py -i hg38_DNA_5don_400span.fa -o XXX_DNA_5don_500span.npy
-
 ```
 Note: NT Mapping: {'A': 0, 'C': 1, 'T': 2, 'G': 3}
 
