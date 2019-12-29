@@ -1,3 +1,5 @@
+![ESPRNN-logo](ESPRNN-logo.jpg)
+
 # ESPRNN: Epigenome-based Splicing Prediction using Recurrent Neural Network
 
 ## Dependencies:
