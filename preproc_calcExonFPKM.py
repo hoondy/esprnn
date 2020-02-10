@@ -51,20 +51,21 @@ exon_count={}
 total_num_reads=[]
 for file in files2process:
     print "Loading",file
+    total_read_count=0
     with open(file, 'r') as f:
         for idx,line in enumerate(f.readlines()):
-            if line.startswith("__no_feature"):
-                # print line.strip().split("\t")
-                total_num_reads.append(line.strip().split("\t")[2])
-            elif not line.startswith("__"):
+            if not line.startswith("__"):
                 eid = line.strip().split("\t")[0]
                 gene = line.strip().split("\t")[1]
                 read_count = line.strip().split("\t")[2]
+
+                total_read_count+=int(read_count)
 
                 if exon_count.has_key(eid):
                     exon_count[eid].append(read_count)
                 else:
                     exon_count[eid]=[read_count]
+        total_num_reads.append(total_read_count)
 # print total_num_reads
 
 with open(args.output, 'w') as out:
