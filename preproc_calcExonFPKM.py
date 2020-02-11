@@ -46,7 +46,6 @@ num_rep = len(files2process)
 
 print "Merging",num_rep,"files..."
 
-exon_id=[]
 exon_count={}
 total_num_reads=[]
 for file in files2process:
